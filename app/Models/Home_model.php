@@ -16,12 +16,18 @@ class Home_model extends Model
 
     public function getFilteredLeads($startDate = null, $endDate = null)
     {
+        // Default end date = today
         if (empty($endDate)) {
             $endDate = date("Y-m-d");
         }
-
+    
+        // Default start date = today if empty
+        if (empty($startDate)) {
+            $startDate = date("Y-m-d");
+        }
+    
         $builder = $this->db->table("lead_table l");
-
+    
         $builder->select("
             l.id,
             l.full_name,
@@ -39,25 +45,28 @@ class Home_model extends Model
             l.api_status,
             l.api_message,
             l.ts,
-            (
-                SELECT COUNT(*) 
-                FROM lead_table 
-                WHERE mobile = l.mobile
-            ) AS lead_count
+            lc.total_leads AS lead_count
         ");
-
-        // Only get latest row per mobile
-        $builder->where("l.id = (SELECT MAX(id) FROM lead_table lt WHERE lt.mobile = l.mobile)");
-
+    
+        // Fast subquery using JOIN (no N+1 query)
+        $builder->join("(SELECT mobile, COUNT(*) AS total_leads 
+                         FROM lead_table 
+                         GROUP BY mobile) lc", 
+                       "lc.mobile = l.mobile", 
+                       "left");
+    
+        // Only latest record per mobile
+        $builder->where("l.id IN (SELECT MAX(id) FROM lead_table GROUP BY mobile)");
+    
         // Date filter
-        if (!empty($startDate) && !empty($endDate)) {
-            $builder->where("DATE(l.ts) >=", $startDate);
-            $builder->where("DATE(l.ts) <=", $endDate);
-        }
-
+        $builder->where("DATE(l.ts) >=", $startDate);
+        $builder->where("DATE(l.ts) <=", $endDate);
+    
+        // Latest first
         $builder->orderBy("l.id", "DESC");
-
+    
         return $builder->get()->getResultArray();
     }
+
 
 }

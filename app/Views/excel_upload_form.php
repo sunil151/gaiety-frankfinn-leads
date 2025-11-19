@@ -7,7 +7,7 @@
 <body>
 
 <div class="card">
-    <h2>📤 Upload Excel File</h2>
+    <h2>ðŸ“¤ Upload Excel File</h2>
 
     <!-- SUCCESS MESSAGE -->
     <?php if (session()->getFlashdata('success')): ?>
@@ -40,13 +40,13 @@
 
     <!-- DOWNLOAD CSV TEMPLATE -->
     <div class="download-link">
-        <a href="<?= base_url('public/sample_format.xlsx') ?>" download>⬇ Download Sample CSV</a>
+        <a href="<?= base_url('public/sample_format.xlsx') ?>" download>â¬‡ Download Sample CSV</a>
     </div>
 
     <!-- ACTION BUTTONS -->
     <div class="actions">
-        <a href="<?= base_url('/') ?>" class="btn btn-back">⬅ Back</a>
-        <a href="<?= base_url('/getData') ?>" class="btn btn-view">📄 View Data</a>
+        <a href="<?= base_url('/') ?>" class="btn btn-back">â¬… Back</a>
+        <a href="<?= base_url('/leads') ?>" class="btn btn-view">ðŸ“„ View Data</a>
     </div>
 </div>
 

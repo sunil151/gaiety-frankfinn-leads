@@ -48,23 +48,32 @@
     </div>
 
     <!-- FILTER FORM -->
-    <form method="post" action="<?= base_url('/getData') ?>" class="filter-box form-inline">
-
+    <!-- FILTER FORM -->
+    <form method="post" action="<?= base_url('/leads') ?>" class="filter-box form-inline">
+    
+        <?php
+            // If user submitted a date, show that
+            // Otherwise default to today's date
+            $today = date("Y-m-d");
+    
+            $start_date = $_POST['start_date'] ?? $today;
+            $end_date   = $_POST['end_date'] ?? $today;
+        ?>
+    
         <label class="mr-2">Start Date:</label>
         <input type="date" name="start_date" class="form-control mr-3"
-               value="<?= isset($_POST['start_date']) ? $_POST['start_date'] : '' ?>">
-
+               value="<?= $start_date ?>">
+    
         <label class="mr-2">End Date:</label>
         <input type="date" name="end_date" class="form-control mr-3"
-               value="<?= isset($_POST['end_date']) ? $_POST['end_date'] : '' ?>">
-
+               value="<?= $end_date ?>">
+    
         <button type="submit" class="btn btn-primary">Filter</button>
-
+    
         <button type="button" id="exportBtn" class="btn btn-success export-btn">
             Export Leads (Filtered)
         </button>
     </form>
-
     <!-- DATA TABLE -->
     <div class="table-responsive">
         <table id="leadTable" class="display table table-bordered table-striped">
@@ -122,7 +131,7 @@
 </div>
 
 <!-- JS Libraries -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
