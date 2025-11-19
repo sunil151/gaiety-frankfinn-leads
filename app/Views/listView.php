@@ -14,35 +14,22 @@
         .filter-box { margin-bottom: 20px; }
         .export-btn { margin-left: 10px; }
 
-        /* ------------------------------ */
-        /* IMPROVED TABLE (smaller, compact) */
-        /* ------------------------------ */
+        /* Compact Table */
         #leadTable {
             font-size: 12px;
             width: 100% !important;
             table-layout: auto;
         }
-
         #leadTable thead th {
             font-size: 13px;
             padding: 6px !important;
             white-space: nowrap;
         }
-
         #leadTable tbody td {
             padding: 5px 6px !important;
             white-space: nowrap;
         }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        /* Reduce DataTables spacing */
-        .dataTables_wrapper .dataTables_length,
-        .dataTables_wrapper .dataTables_filter {
-            margin-bottom: 8px;
-        }
+        .table-responsive { overflow-x: auto; }
     </style>
 </head>
 
@@ -50,7 +37,15 @@
 
 <div class="container mt-4">
 
-    <h3 class="mb-3">Lead List</h3>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Lead List</h3>
+
+        <!-- NEW BUTTONS -->
+        <div>
+            <a href="<?= base_url('/') ?>" class="btn btn-secondary mr-2">Home Page</a>
+            <a href="<?= base_url('/uploadExcel') ?>" class="btn btn-info">Upload Data</a>
+        </div>
+    </div>
 
     <!-- FILTER FORM -->
     <form method="post" action="<?= base_url('/getData') ?>" class="filter-box form-inline">
@@ -65,13 +60,12 @@
 
         <button type="submit" class="btn btn-primary">Filter</button>
 
-        <!-- EXPORT BUTTON -->
         <button type="button" id="exportBtn" class="btn btn-success export-btn">
             Export Leads (Filtered)
         </button>
     </form>
 
-    <!-- DATA TABLE (RESPONSIVE WRAPPER) -->
+    <!-- DATA TABLE -->
     <div class="table-responsive">
         <table id="leadTable" class="display table table-bordered table-striped">
             <thead class="thead-dark">
@@ -135,14 +129,12 @@
 <script>
 $(document).ready(function () {
 
-    // Initialize DataTable
-    var table = $('#leadTable').DataTable({
+    $('#leadTable').DataTable({
         pageLength: 25,
-        ordering:  true,
+        ordering: true,
         searching: true
     });
 
-    // EXPORT BUTTON
     $("#exportBtn").click(function(){
         exportTableToCSV("leads_export.csv");
     });
@@ -151,32 +143,40 @@ $(document).ready(function () {
 
 // EXPORT FUNCTION
 function exportTableToCSV(filename) {
+    var table = $('#leadTable').DataTable();
+    var data = table.rows({ search: 'applied' }).data(); // all filtered rows
 
     var csv = [];
-    var rows = document.querySelectorAll("#leadTable tr");
 
-    for (var i = 0; i < rows.length; i++) {
-        var row = [], cols = rows[i].querySelectorAll("td, th");
-        for (var j = 0; j < cols.length; j++)
-            row.push(cols[j].innerText.replace(/,/g, " ")); 
-        csv.push(row.join(",")); 
-    }
+    // Get table headers
+    var headers = [];
+    $('#leadTable thead th').each(function () {
+        headers.push($(this).text().trim());
+    });
+    csv.push(headers.join(","));
 
-    // Download CSV
-    var csvFile;
-    var downloadLink;
+    // Loop through DataTable rows
+    data.each(function (rowData) {
+        var rowArray = [];
 
-    csvFile = new Blob([csv.join("\n")], {type: "text/csv"});
+        rowData.forEach(function (cell) {
+            // Remove commas from data
+            rowArray.push(('' + cell).replace(/,/g, ' '));
+        });
 
-    downloadLink = document.createElement("a");
+        csv.push(rowArray.join(","));
+    });
+
+    // Create CSV file
+    var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+    var downloadLink = document.createElement("a");
     downloadLink.download = filename;
-
     downloadLink.href = window.URL.createObjectURL(csvFile);
     downloadLink.style.display = "none";
-
     document.body.appendChild(downloadLink);
     downloadLink.click();
 }
+
 </script>
 
 </body>

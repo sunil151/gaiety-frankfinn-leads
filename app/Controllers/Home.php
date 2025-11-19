@@ -85,16 +85,18 @@ class Home extends Controller
                     
                     $insert_array = $data;
 
-                    // $api_response = $this->api_request($data);
-                    // $result = json_decode($api_response, true);
+                    $api_response = $this->api_request($data);
+                    $result = json_decode($api_response, true);
                     
-                    // if (isset($result['status']) && $result['status'] === true) {
-                    //     $insert_array["api_status"] = "success";
-                    //     $insert_array["api_message"] = $result['message'];
-                    // } else {
-                    //     $insert_array["api_status"] = "fail";
-                    //     $insert_array["api_message"] = $result['message'];
-                    // }
+                    if (isset($result['status']) && $result['status'] === true) {
+                        $insert_array["api_status"] = "success";
+                        $insert_array["api_message"] = $result['message'];
+                    } else {
+                        $insert_array["api_status"] = "fail";
+                        $insert_array["api_message"] = $result['message'];
+                    }
+
+
                     
                     $insert_array["gad_source"] = $row['L'];
                     $insert_array["gclid"] = $row['M'];

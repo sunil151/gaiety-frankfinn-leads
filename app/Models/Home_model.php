@@ -16,6 +16,10 @@ class Home_model extends Model
 
     public function getFilteredLeads($startDate = null, $endDate = null)
     {
+        if (empty($endDate)) {
+            $endDate = date("Y-m-d");
+        }
+
         $builder = $this->db->table("lead_table l");
 
         $builder->select("
