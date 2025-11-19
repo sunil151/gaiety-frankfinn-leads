@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Dashboard</title>
-    <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('public/assets/css/style.css') ?>">
 </head>
 <body>
 
