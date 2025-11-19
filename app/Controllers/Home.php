@@ -36,9 +36,6 @@ class Home extends Controller
                 $path = $_FILES['excel_file']['tmp_name'];				
                 $spreadsheet = IOFactory::load($path);
                 $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-                // echo "<pre>";
-                // print_r($sheetData);exit;
-
 
                 $firstRow = true;
 				$hasData = false;
@@ -79,28 +76,11 @@ class Home extends Controller
 						'utm_term' => $row['J'],
 						'utm_content' => $row['K']						                       
 					];
-
-
-                    // $data = [
-						
-					// 	'full_name'  => "Test 151",
-					// 	'mobile'  => "9615196151",
-					// 	'email' => "test151@gmail.com",
-					// 	'dob' => '2005-05-01',
-					// 	'centerId' => "20",
-					// 	'qualificationId' => "12",
-					// 	'campaign_source' => "89",
-					// 	'utm_medium' => "test 151",
-					// 	'utm_campaign' => "test",
-					// 	'utm_term' => "test",
-					// 	'utm_content' => "test"
-						                       
-					// ];
                     
                     $insert_array = $data;
+
                     $api_response = $this->api_request($data);
                     $result = json_decode($api_response, true);
-                    // print_r($result);exit;
                     
                     if (isset($result['status']) && $result['status'] === true) {
                         $insert_array["api_status"] = "success";
@@ -115,15 +95,8 @@ class Home extends Controller
                     $insert_array["gbraid"] = $row['N'];
                     // print_r($insert_array);
 
-					$Home_model->save_lead_data($insert_array);			
-                    // exit;		
+					$Home_model->save_lead_data($insert_array);
 				}
-
-				
-
-
-
-                
 
                 return redirect()->back()->with('success', 'Excel file imported successfully.');
 
@@ -139,13 +112,9 @@ class Home extends Controller
     }
 
     function api_request( $data ) {
-        $url = "https://www.frankfinn.com/newleadLms";
-      
-        // print_r($data);
-        
+        $url = "https://www.frankfinn.com/newleadLms";        
         $headers = [
             'Content-Type: application/json',
-            // 'Authorization: Bearer YOUR_API_TOKEN_HERE'
         ];
 
         $ch = curl_init($url);
@@ -155,16 +124,7 @@ class Home extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
         return $response = curl_exec($ch);
-
-        // if (curl_errno($ch)) {
-        //     echo 'Curl error: ' . curl_error($ch);
-        // } else {
-        //     return $response;
-        // }
-
         curl_close($ch);
-    }
-
-    
+    }    
 
 }
