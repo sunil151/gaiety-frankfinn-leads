@@ -40,7 +40,7 @@
 
     <!-- DOWNLOAD CSV TEMPLATE -->
     <div class="download-link">
-        <a href="<?= base_url('public/sample_file.csv') ?>" download>⬇ Download Sample CSV</a>
+        <a href="<?= base_url('public/sample_format.xlsx') ?>" download>⬇ Download Sample CSV</a>
     </div>
 
     <!-- ACTION BUTTONS -->
