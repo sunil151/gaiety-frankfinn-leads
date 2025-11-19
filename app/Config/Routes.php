@@ -7,5 +7,9 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+$routes->get('/uploadExcel', 'Home::excel_upload_form');
+$routes->get('/getData', 'Home::getLeads');
+$routes->post('/getData', 'Home::getLeads');
+
 $routes->get('excelimport', 'Home::index');
 $routes->post('excelimport/upload', 'Home::upload');

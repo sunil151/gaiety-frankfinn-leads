@@ -9,6 +9,12 @@ class Home extends Controller
 
     public function index()
     {
+        // return view('excel_upload_form'); // Create a view for the upload form
+        return view('index'); 
+    }
+
+    public function excel_upload_form()
+    {
         return view('excel_upload_form'); // Create a view for the upload form
     }
 
@@ -79,16 +85,16 @@ class Home extends Controller
                     
                     $insert_array = $data;
 
-                    $api_response = $this->api_request($data);
-                    $result = json_decode($api_response, true);
+                    // $api_response = $this->api_request($data);
+                    // $result = json_decode($api_response, true);
                     
-                    if (isset($result['status']) && $result['status'] === true) {
-                        $insert_array["api_status"] = "success";
-                        $insert_array["api_message"] = $result['message'];
-                    } else {
-                        $insert_array["api_status"] = "fail";
-                        $insert_array["api_message"] = $result['message'];
-                    }
+                    // if (isset($result['status']) && $result['status'] === true) {
+                    //     $insert_array["api_status"] = "success";
+                    //     $insert_array["api_message"] = $result['message'];
+                    // } else {
+                    //     $insert_array["api_status"] = "fail";
+                    //     $insert_array["api_message"] = $result['message'];
+                    // }
                     
                     $insert_array["gad_source"] = $row['L'];
                     $insert_array["gclid"] = $row['M'];
@@ -126,5 +132,25 @@ class Home extends Controller
         return $response = curl_exec($ch);
         curl_close($ch);
     }    
+
+
+    public function getLeads()
+    {
+      
+        $Home_model = new Home_model();
+        $startDate = $this->request->getPost("start_date");
+        $endDate   = $this->request->getPost("end_date");
+
+        $list = $Home_model->getFilteredLeads($startDate, $endDate);
+
+       
+        $data = [
+            "list" => $list
+        ];
+
+        return view("listView", $data);
+
+        // return $this->response->setJSON(["data" => $list]);
+    }
 
 }
